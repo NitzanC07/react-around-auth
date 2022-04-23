@@ -63,6 +63,8 @@ class Api {
       method: methodType,     
     })
   }
+}
+
 
 // Token: 38a23878-64ce-4abb-ae0d-d30d11cc9a38 Group ID: group-12
 const api = new Api({
