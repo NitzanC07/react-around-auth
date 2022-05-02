@@ -1,6 +1,7 @@
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
+import Register from './Register';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import ImagePopup from './ImagePopup.js';
@@ -26,7 +27,7 @@ function App() {
             console.log("Error - there is any communication with the server: ", err);
         });
     }, []);
-
+ 
     function handleCardLike(card) {
         // Check one more time if this card was already liked
         const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -168,6 +169,7 @@ function App() {
             <div className="page">
                 <div className="page__container">
                     <Header />
+                    <Register />
                     <Main 
                         onEditProfileClick={handleEditProfileClick}
                         onAddPlaceClick={handleAddPlaceClick}
