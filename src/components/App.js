@@ -10,6 +10,10 @@ import api from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext.js';
 import AddPlacePopup from './AddPlacePopup.js';
+import Login from './login.js';
+import InfoToolTip from './InfoToolTip.js';
+import iconSuccess from '../images/tool-tip-success.svg';
+import iconFailed from '../images/tool-tip-failed.svg';
 
 //** This the main file of the application.  */
 function App() {
@@ -48,6 +52,8 @@ function App() {
     const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
     const [isImagePopupOpen, setImagePopupOpen] = useState(false);
     const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = useState(false);
+    const [isInfoToolTipSuccess, setInfoToolTipSuccess] = useState(false);
+    const [isInfoToolTipFaild, setInfoToolTipFaild] = useState(false);
     const [selectedCard, setSelectedCard] = useState({});
         
     function closeAllPopups() {
@@ -56,6 +62,8 @@ function App() {
         setAddPlacePopupOpen(false);
         setImagePopupOpen(false);
         setDeleteCardPopupOpen(false);
+        setInfoToolTipSuccess(false);
+        setInfoToolTipFaild(false);
     }
     
     function handleEditAvatarClick() {
@@ -169,7 +177,17 @@ function App() {
             <div className="page">
                 <div className="page__container">
                     <Header />
-                    <Register />
+
+                    <Register 
+                        title="Sign up"
+                        text="Log in here!"
+                    />
+
+                    <Login 
+                        title="Sign in"
+                        text="Sign up here!"
+                    />
+
                     <Main 
                         onEditProfileClick={handleEditProfileClick}
                         onAddPlaceClick={handleAddPlaceClick}
@@ -182,7 +200,8 @@ function App() {
                         cards={cards}
                         onCardDelete={handleDeleteCardClick}
                         onCardlikeClick={handleCardLike}
-                        />
+                    />
+
                     <Footer />
 
                     <ImagePopup 
@@ -190,6 +209,22 @@ function App() {
                         isOpen={isImagePopupOpen ? 'popup_open' : ''} 
                         onClose={closeAllPopups} 
                         selectedCard={selectedCard}
+                    />
+
+                    <InfoToolTip
+                        name="info-success"
+                        isOpen={isInfoToolTipSuccess ? 'popup_open' : ''}
+                        onClose={closeAllPopups}
+                        text='Success! You have now been registered.'
+                        icon={iconSuccess}
+                    />
+
+                    <InfoToolTip
+                        name="info-faild"
+                        isOpen={isInfoToolTipFaild ? 'popup_open' : ''}
+                        onClose={closeAllPopups}
+                        text='Oops, something went wrong! Please try again.'
+                        icon={iconFailed}
                     />
 
                     <EditProfilePopup

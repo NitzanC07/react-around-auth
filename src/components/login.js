@@ -1,4 +1,4 @@
-function Register(props) {
+function Login(props) {
     // console.log(props);
 
     return(
@@ -30,7 +30,7 @@ function Register(props) {
                     >
                         {props.title}
                     </button>
-                    <p className="auth__text">Already a member? {props.text}</p>
+                    <p className="auth__text">Not a member yet? {props.text}</p>
                 </div>
                 
             </form>
@@ -38,4 +38,4 @@ function Register(props) {
     )
 }
 
-export default Register;
+export default Login;

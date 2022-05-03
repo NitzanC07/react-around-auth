@@ -1,4 +1,4 @@
-.register__input {
+.auth__input {
     width: 98%;
     padding-bottom: 13px;
     margin-bottom: 30px;
@@ -7,10 +7,13 @@
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 1);
     background-color: transparent;
-    color: #fff;
+    color: #ccc;
   }
   
-  .register__input:focus {
+  .auth__input:focus {
     outline: 0;
   }
   
+  .auth__input:last-of-type {
+    margin-bottom: 0;
+  }

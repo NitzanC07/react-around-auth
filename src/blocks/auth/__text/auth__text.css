@@ -1,16 +1,15 @@
-.register__text {
-    /* max-width: 330px; */
+.auth__text {
     font-weight: 400;
     font-size: 14px;
     line-height: 17px;
-    margin: 15px 0 0;
+    margin: 15px 0 80px;
     text-align: center;
   }
   
   @media screen and (max-width: 582px) {
-    .register__text {
-      font-size: 18px;
-      line-height: 22px;
+    .auth__text {
+      font-size: 12px;
+      line-height: 15px;
     }
   }
   
