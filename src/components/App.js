@@ -78,6 +78,14 @@ function App() {
         setAddPlacePopupOpen(true);
     }
 
+    function handleInfoToolTipSuccess() {
+        setInfoToolTipSuccess(true);
+    }
+
+    function handleInfoToolTipFaild() {
+        setInfoToolTipFaild(true);
+    }
+
     function handleImageClick(card) {
         setSelectedCard(card)
         setImagePopupOpen(true);
