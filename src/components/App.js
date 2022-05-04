@@ -8,6 +8,8 @@ import ImagePopup from './ImagePopup.js';
 import DeleteCardPopup from './DeleteCardPopup.js';
 import api from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
+import { Routes, Switch, Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute.js';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import Login from './login.js';
@@ -15,12 +17,14 @@ import InfoToolTip from './InfoToolTip.js';
 import iconSuccess from '../images/tool-tip-success.svg';
 import iconFailed from '../images/tool-tip-failed.svg';
 
+
 //** This the main file of the application.  */
 function App() {
 
     const [currentUser , setCurrentUser ] = useState({});
     const [cards, setCards] = useState([]);
-
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    
     useEffect(() => {
         Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cardsData]) => {
@@ -186,32 +190,39 @@ function App() {
                 <div className="page__container">
                     <Header />
 
-                    <Register 
-                        title="Sign up"
-                        text="Log in here!"
-                    />
+                    <Switch>
+                        <ProtectedRoute exact path='/' loggedIn={false}>
+                            <Main 
+                                onEditProfileClick={handleEditProfileClick}
+                                onAddPlaceClick={handleAddPlaceClick}
+                                onEditAvatarClick={handleEditAvatarClick}
+                                onCardClick={handleImageClick}
+                                isEditProfilePopupOpen={isEditProfilePopupOpen}
+                                isAddPlacePopupOpen={isAddPlacePopupOpen}
+                                isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+                                isImagePopupOpen={isImagePopupOpen}
+                                cards={cards}
+                                onCardDelete={handleDeleteCardClick}
+                                onCardlikeClick={handleCardLike}
+                            />
 
-                    <Login 
-                        title="Sign in"
-                        text="Sign up here!"
-                    />
+                            <Footer />
+                        </ProtectedRoute>
 
-                    <Main 
-                        onEditProfileClick={handleEditProfileClick}
-                        onAddPlaceClick={handleAddPlaceClick}
-                        onEditAvatarClick={handleEditAvatarClick}
-                        onCardClick={handleImageClick}
-                        isEditProfilePopupOpen={isEditProfilePopupOpen}
-                        isAddPlacePopupOpen={isAddPlacePopupOpen}
-                        isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-                        isImagePopupOpen={isImagePopupOpen}
-                        cards={cards}
-                        onCardDelete={handleDeleteCardClick}
-                        onCardlikeClick={handleCardLike}
-                    />
-
-                    <Footer />
-
+                        <Route path='/signup'>
+                            <Register 
+                                title="Sign up"
+                                text="Log in here!" 
+                            />
+                        </Route>
+                        <Route path='/signin'>
+                            <Login 
+                                title="Sign in"
+                                text="Sign up here!"
+                            />
+                        </Route>
+                    </Switch>
+                                        
                     <ImagePopup 
                         className="popup popup_type_image" 
                         isOpen={isImagePopupOpen ? 'popup_open' : ''} 
