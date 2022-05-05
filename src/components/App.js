@@ -8,7 +8,7 @@ import ImagePopup from './ImagePopup.js';
 import DeleteCardPopup from './DeleteCardPopup.js';
 import api from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
-import { Routes, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext.js';
 import AddPlacePopup from './AddPlacePopup.js';
@@ -188,10 +188,14 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
                 <div className="page__container">
-                    <Header />
+                    <Header 
+                        isLoggedIn={isLoggedIn} 
+                        user={currentUser}
+                        // page={}
+                    />
 
                     <Switch>
-                        <ProtectedRoute exact path='/' loggedIn={false}>
+                        <ProtectedRoute exact path='/' loggedIn={isLoggedIn}>
                             <Main 
                                 onEditProfileClick={handleEditProfileClick}
                                 onAddPlaceClick={handleAddPlaceClick}
@@ -212,13 +216,15 @@ function App() {
                         <Route path='/signup'>
                             <Register 
                                 title="Sign up"
-                                text="Log in here!" 
+                                link="Log in" 
+                                isLoggedIn={isLoggedIn}
                             />
                         </Route>
                         <Route path='/signin'>
                             <Login 
-                                title="Sign in"
-                                text="Sign up here!"
+                                title="Log in"
+                                link='Sign up'
+                                isLoggedIn={isLoggedIn}
                             />
                         </Route>
                     </Switch>
@@ -226,7 +232,7 @@ function App() {
                     <ImagePopup 
                         className="popup popup_type_image" 
                         isOpen={isImagePopupOpen ? 'popup_open' : ''} 
-                        onClose={closeAllPopups} 
+                        onClose={closeAllPopups}
                         selectedCard={selectedCard}
                     />
 

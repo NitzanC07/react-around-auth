@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Register(props) {
     // console.log(props);
 
@@ -30,7 +32,10 @@ function Register(props) {
                     >
                         {props.title}
                     </button>
-                    <p className="auth__text">Already a member? {props.text}</p>
+                    <p className="auth__text">Already a member?
+                    <Link to='/signin' className='auth__links'> {props.link} </Link>
+                    here!
+                    </p>
                 </div>
                 
             </form>

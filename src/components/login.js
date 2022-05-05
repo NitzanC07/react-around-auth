@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Login(props) {
     // console.log(props);
 
@@ -30,7 +32,10 @@ function Login(props) {
                     >
                         {props.title}
                     </button>
-                    <p className="auth__text">Not a member yet? {props.text}</p>
+                    <p className="auth__text">Not a member yet?
+                    <Link to='/signup' className='auth__links'> {props.link} </Link>
+                    here!
+                    </p>
                 </div>
                 
             </form>
