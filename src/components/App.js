@@ -8,7 +8,7 @@ import ImagePopup from './ImagePopup.js';
 import DeleteCardPopup from './DeleteCardPopup.js';
 import api from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext.js';
 import AddPlacePopup from './AddPlacePopup.js';
@@ -16,15 +16,28 @@ import Login from './login.js';
 import InfoToolTip from './InfoToolTip.js';
 import iconSuccess from '../images/tool-tip-success.svg';
 import iconFailed from '../images/tool-tip-failed.svg';
-
+import * as auth from '../utils/auth';
 
 //** This the main file of the application.  */
 function App() {
 
-    const [currentUser , setCurrentUser ] = useState({});
-    const [cards, setCards] = useState([]);
+    const history = useHistory();
+    const [currentUser , setCurrentUser ] = useState(null);
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const [cards, setCards] = useState([]);
     
+    const handleLogin = (userData) => {
+        setLoggedIn(true);
+        setCurrentUser(userData)
+    }
+    
+    // useEffect(() => {
+    //     const jwt = localStorage.getItem('jwt');
+    //     if(jwt) {
+    //         auth.
+    //     }
+    // })
+
     useEffect(() => {
         Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cardsData]) => {
@@ -184,6 +197,8 @@ function App() {
             })
     }
 
+
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
@@ -195,7 +210,10 @@ function App() {
                     />
 
                     <Switch>
-                        <ProtectedRoute exact path='/' loggedIn={isLoggedIn}>
+                        <ProtectedRoute 
+                            exact path='/' 
+                            loggedIn={isLoggedIn}
+                        >
                             <Main 
                                 onEditProfileClick={handleEditProfileClick}
                                 onAddPlaceClick={handleAddPlaceClick}
@@ -211,6 +229,32 @@ function App() {
                             />
 
                             <Footer />
+
+                            <EditProfilePopup
+                                isOpen={isEditProfilePopupOpen}
+                                onClose={closeAllPopups}
+                                onUpdateUser={handlerUpdateUser}
+                            />
+
+                            <AddPlacePopup 
+                                isOpen={isAddPlacePopupOpen}
+                                onClose={closeAllPopups}
+                                onUpdateAddCard={handlerUpdateAddCard}
+                                cards={cards}
+                            />
+
+                            <EditAvatarPopup 
+                                isOpen={isEditAvatarPopupOpen} 
+                                onClose={closeAllPopups} 
+                                onUpdateAvatar={handleUpdateAvatar}
+                            />
+
+                            <DeleteCardPopup 
+                                isOpen={isDeleteCardPopupOpen}
+                                onClose={closeAllPopups}
+                                onUpdateDeleteCard={handleCardDelete}
+                                selectedCard={selectedCard}
+                            />
                         </ProtectedRoute>
 
                         <Route path='/signup'>
@@ -252,31 +296,7 @@ function App() {
                         icon={iconFailed}
                     />
 
-                    <EditProfilePopup
-                        isOpen={isEditProfilePopupOpen}
-                        onClose={closeAllPopups}
-                        onUpdateUser={handlerUpdateUser}
-                    />
-
-                    <AddPlacePopup 
-                        isOpen={isAddPlacePopupOpen}
-                        onClose={closeAllPopups}
-                        onUpdateAddCard={handlerUpdateAddCard}
-                        cards={cards}
-                    />
-
-                    <EditAvatarPopup 
-                        isOpen={isEditAvatarPopupOpen} 
-                        onClose={closeAllPopups} 
-                        onUpdateAvatar={handleUpdateAvatar}
-                    />
-
-                    <DeleteCardPopup 
-                        isOpen={isDeleteCardPopupOpen}
-                        onClose={closeAllPopups}
-                        onUpdateDeleteCard={handleCardDelete}
-                        selectedCard={selectedCard}
-                    />
+                    
                     
                 </div>
             </div>

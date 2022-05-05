@@ -1,7 +1,25 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import * as auth from '../utils/auth';
 
 function Login(props) {
     // console.log(props);
+
+    const [history, setHistory] = useState();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        auth.login(email, password)
+        .then((res) => {
+            console.log(`Login succesful: ${res}`);
+            history.push('/');
+        })
+        .catch((err) => {
+            console.log(`Something went wrong: ${err}`);
+        })
+    }
 
     return(
         <section className='auth'>
@@ -13,6 +31,8 @@ function Login(props) {
                         id='input-email'
                         type='email'
                         name='email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder='Email'
                         required
                     />
@@ -21,6 +41,8 @@ function Login(props) {
                         id='input-password'
                         type='password'
                         name='password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder='Password'
                         required
                     />
@@ -29,6 +51,7 @@ function Login(props) {
                     <button 
                         className='auth__submit'
                         type='submit'
+                        onClick={handleSubmit}
                     >
                         {props.title}
                     </button>
