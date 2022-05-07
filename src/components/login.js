@@ -5,20 +5,12 @@ import * as auth from '../utils/auth';
 function Login(props) {
     // console.log(props);
 
-    const [history, setHistory] = useState();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        auth.login(email, password)
-        .then((res) => {
-            console.log(`Login succesful: ${res}`);
-            history.push('/');
-        })
-        .catch((err) => {
-            console.log(`Something went wrong: ${err}`);
-        })
+        props.onSubmit(email, password)
     }
 
     return(
@@ -33,7 +25,7 @@ function Login(props) {
                         name='email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder='Email'
+                        placeholder='Enter your E-mail here...'
                         required
                     />
                     <input 
@@ -43,7 +35,7 @@ function Login(props) {
                         name='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder='Password'
+                        placeholder='Enter your password here...'
                         required
                     />
                 </div>

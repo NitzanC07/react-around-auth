@@ -1,15 +1,26 @@
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import logo from '../images/logo.svg';
 
 function Header(props) {
-    console.log(props);
+
+    const handleLogOut = () => {
+        props.logOut();
+    }
 
     return(
         <header className="header">
-            <img className='logo' src={logo} alt='Logo picture' />
+            <img className='logo' src={logo} alt='Logo' />
             <div>
-                <NavLink to='/' className='header__links'>{props.isLoggedIn ? props.user.name : ''}</NavLink>
-                <NavLink to='/signin' className='header__links'> {props.isLoggedIn ? 'Log out' : 'Log in'}</NavLink>
+                <NavLink to='/' className='header__links'>
+                    {props.loggedIn ? props.user : ''}
+                </NavLink>
+                {/* <NavLink to='/signin' className='header__links'> */}
+                     {
+                        props.loggedIn 
+                        ? <NavLink to='/signin' onClick={handleLogOut} className='header__links'>Log out</NavLink>
+                        : <NavLink to={props.url} className='header__links'>{props.buttonText}</NavLink>
+                     }
+                {/* </NavLink> */}
             </div>
             
             

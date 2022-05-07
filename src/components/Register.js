@@ -5,23 +5,13 @@ import * as auth from '../utils/auth';
 function Register(props) {
     // console.log(props);
 
-    const history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        auth.register({email, password})
-        .then((res) => {
-            console.log(`Register succesful: ${res}`);
-            history.push('/signin');
-        })
-        .catch((err) => {
-            console.log(`Something went wrong: ${err}`);
-        })
+        props.onSubmit({email, password})
     }
-
-    console.log(`change values. password: ${password} Email: ${email}`);
 
     return(
         <section className='auth'>
@@ -35,7 +25,7 @@ function Register(props) {
                         name='email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder='Email'
+                        placeholder='Enter your E-mail here...'
                         required
                     />
                     <input 
@@ -45,7 +35,7 @@ function Register(props) {
                         name='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder='Password'
+                        placeholder='Choose a password here...'
                         required
                     />
                 </div>

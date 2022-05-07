@@ -12,31 +12,68 @@ import { Switch, Route, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext.js';
 import AddPlacePopup from './AddPlacePopup.js';
-import Login from './login.js';
+import Login from './Login.js';
 import InfoToolTip from './InfoToolTip.js';
 import iconSuccess from '../images/tool-tip-success.svg';
 import iconFailed from '../images/tool-tip-failed.svg';
 import * as auth from '../utils/auth';
 
-//** This the main file of the application.  */
 function App() {
 
     const history = useHistory();
-    const [currentUser , setCurrentUser ] = useState(null);
+    const [currentUser , setCurrentUser ] = useState({});
+    const [userData, setUserData] = useState(null);
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [cards, setCards] = useState([]);
-    
-    const handleLogin = (userData) => {
-        setLoggedIn(true);
-        setCurrentUser(userData)
+
+    function handleLoginSubmit(email, password) {
+        auth.login(email, password)
+        .then((res) => {
+            if(res.token) {
+                localStorage.setItem("jwt", res.token);
+                setCurrentUser(currentUser);
+                setLoggedIn(true);
+                setInfoToolTipSuccess(true);
+                history.push('/');
+            } else {
+                setInfoToolTipFaild(true);
+            }
+        })
+        .catch((err) => {
+            console.log(`Something went wrong: ${err}`);
+        });
     }
     
-    // useEffect(() => {
-    //     const jwt = localStorage.getItem('jwt');
-    //     if(jwt) {
-    //         auth.
-    //     }
-    // })
+    function handleRegisterSubmit({email, password}) {
+        auth.register({email, password})
+        .then((res) => {
+            console.log(`Register succesful: ${res}`);
+            history.push('/signin');
+        })
+        .catch((err) => {
+            console.log(`Something went wrong: ${err}`);
+        });
+    }
+
+    function handleSignOut() {
+        localStorage.removeItem('jwt');
+        setLoggedIn(false);
+    }
+
+    useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+        if(jwt) {
+            auth.getContent(jwt).then((data) => {
+                if(data) {
+                    setLoggedIn(true);
+                    setUserData(JSON.stringify(data));
+                    history.push('/')
+                }
+            }, )
+        }
+    }, [isLoggedIn]);
+
+    const userEmail = userData ? JSON.parse(userData).data.email : '';
 
     useEffect(() => {
         Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -50,12 +87,9 @@ function App() {
     }, []);
  
     function handleCardLike(card) {
-        // Check one more time if this card was already liked
         const isLiked = card.likes.some(i => i._id === currentUser._id);
-        // Send a request to the API and getting the updated card data
         api.changeLikeCardStatus(card._id, !isLiked)
         .then((newCard) => {
-            // console.log(newCard);
             setCards((state) => 
                 state.map((c) => c._id === card._id ? newCard : c ));
         })
@@ -109,18 +143,15 @@ function App() {
     }
 
     function handleDeleteCardClick(card) {
-        // console.log("Ask to delete: ", card);
         setSelectedCard(card);
         setDeleteCardPopupOpen(true);
     }
 
     function handleCardDelete(card) {
-        // console.log("Card was submitted: ", card);
         setSelectedCard(card)
         const cardId = card._id
         api.deleteCard(cardId)
         .then(() => {
-            // console.log("Card was deleted.", card);
             setCards((cards) => cards.filter((c) => c._id !== cardId))
             closeAllPopups();
         })
@@ -197,23 +228,22 @@ function App() {
             })
     }
 
-
-
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
                 <div className="page__container">
-                    <Header 
-                        isLoggedIn={isLoggedIn} 
-                        user={currentUser}
-                        // page={}
-                    />
-
                     <Switch>
                         <ProtectedRoute 
                             exact path='/' 
                             loggedIn={isLoggedIn}
                         >
+                            <Header 
+                                loggedIn={isLoggedIn} 
+                                user={userEmail}
+                                logOut={handleSignOut}
+                                buttonText='Log out'
+                                url='/signin'
+                            />
                             <Main 
                                 onEditProfileClick={handleEditProfileClick}
                                 onAddPlaceClick={handleAddPlaceClick}
@@ -258,17 +288,35 @@ function App() {
                         </ProtectedRoute>
 
                         <Route path='/signup'>
+                            <Header 
+                                loggedIn={isLoggedIn}
+                                logOut={handleSignOut}
+                                user={userEmail}
+                                buttonText='Log in'
+                                url='/signin'
+                            />
                             <Register 
                                 title="Sign up"
                                 link="Log in" 
-                                isLoggedIn={isLoggedIn}
+                                loggedIn={isLoggedIn}
+                                onSubmit={handleRegisterSubmit}
+                                infoPopup={setInfoToolTipFaild}
                             />
                         </Route>
                         <Route path='/signin'>
+                            <Header 
+                                loggedIn={isLoggedIn}
+                                logOut={handleSignOut}
+                                user={userEmail}
+                                buttonText='Sign up'
+                                url='/signup'
+                            />
                             <Login 
                                 title="Log in"
                                 link='Sign up'
-                                isLoggedIn={isLoggedIn}
+                                loggedIn={setLoggedIn}
+                                onSubmit={handleLoginSubmit}
+                                infoPopup={setInfoToolTipFaild}
                             />
                         </Route>
                     </Switch>
