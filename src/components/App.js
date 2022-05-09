@@ -35,41 +35,48 @@ function App() {
                 setLoggedIn(true);
                 setInfoToolTipSuccess(true);
                 history.push('/');
-            } else {
-                setInfoToolTipFaild(true);
+                console.log(`User logged in: ${localStorage}`);
             }
         })
         .catch((err) => {
             console.log(`Something went wrong: ${err}`);
+            setInfoToolTipFaild(true);
         });
     }
     
     function handleRegisterSubmit({email, password}) {
         auth.register({email, password})
         .then((res) => {
-            console.log(`Register succesful: ${res}`);
+            setInfoToolTipSuccess(true);
             history.push('/signin');
         })
         .catch((err) => {
             console.log(`Something went wrong: ${err}`);
+            setInfoToolTipFaild(true);
         });
     }
 
     function handleSignOut() {
         localStorage.removeItem('jwt');
+        console.log(`User logged out: ${localStorage}`);
         setLoggedIn(false);
     }
 
     useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if(jwt) {
-            auth.getContent(jwt).then((data) => {
+            auth.getContent(jwt)
+            .then((data) => {
                 if(data) {
                     setLoggedIn(true);
                     setUserData(JSON.stringify(data));
                     history.push('/')
                 }
             }, )
+            .catch((err) => {
+                console.log(`Something went wrong in getContent function: ${err}`);
+                setInfoToolTipFaild(true);
+            })
         }
     }, [isLoggedIn]);
 

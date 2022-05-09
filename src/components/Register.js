@@ -15,7 +15,10 @@ function Register(props) {
 
     return(
         <section className='auth'>
-            <form className='auth__form'>
+            <form 
+                className='auth__form'
+                onSubmit={handleSubmit}
+            >
                 <div>
                     <h1 className='auth__title'>{props.title}</h1>
                     <input 
@@ -43,7 +46,6 @@ function Register(props) {
                     <button 
                         className='auth__submit'
                         type='submit'
-                        onClick={handleSubmit}
                     >
                         {props.title}
                     </button>
