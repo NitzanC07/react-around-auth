@@ -1,7 +1,7 @@
 export const BASE_URL = "https://register.nomoreparties.co";
 
 export const checkResponse = (res) => {
-  console.log(`checkResponse: ${res}`);
+  // console.log(`checkResponse: ${res}`);
   if(res.ok) {
     return res.json();
   } else {
