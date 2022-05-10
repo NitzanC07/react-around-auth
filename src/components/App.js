@@ -167,26 +167,6 @@ function App() {
         })
     }
 
-    useEffect(() => {
-        const closeByEscape = (evt) => {
-            if (evt.key === 'Escape') {
-                closeAllPopups();
-            }
-        }
-        document.addEventListener('keyup', closeByEscape)
-        return () => document.removeEventListener('keyup', closeByEscape)
-    }, [])
-
-    useEffect(() => {
-        const closeByOverlay = (evt) => {
-            if(evt.target.classList.contains('popup_open')) {
-                closeAllPopups();
-            }
-        }
-        document.addEventListener('mouseup', closeByOverlay)
-        return () => document.removeEventListener('mouseup', closeByOverlay)
-    }, [])
-
     function handlerUpdateUser(data) {
         api.setUserInfo(data)
             .then(() => {
@@ -331,6 +311,7 @@ function App() {
                     <ImagePopup 
                         className="popup popup_type_image" 
                         isOpen={isImagePopupOpen ? 'popup_open' : ''} 
+                        name='image'
                         onClose={closeAllPopups}
                         selectedCard={selectedCard}
                     />
@@ -350,9 +331,6 @@ function App() {
                         text='Oops, something went wrong! Please try again.'
                         icon={iconFailed}
                     />
-
-                    
-                    
                 </div>
             </div>
         </CurrentUserContext.Provider>
